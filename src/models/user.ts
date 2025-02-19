@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import {Model} from "mongoose";
+import validator from "validator";
 
 interface IUser {
     firstName: string;
@@ -25,6 +26,12 @@ const userSchema = new mongoose.Schema<IUser>({
         type: String,
         required: true,
         trim: true,
+        validate: [
+            {
+                validator: (email: string) => validator.isEmail(email),
+                message: 'Invalid email address',
+            },
+        ],
     },
     country:{
         type: String,
@@ -37,6 +44,10 @@ const userSchema = new mongoose.Schema<IUser>({
     password: {
         type: String,
         required: true,
+        validate: {
+            validator: (password: string) => validator.isStrongPassword(password),
+            message: 'Password is not strong enough',
+        },
     },
 });
 
